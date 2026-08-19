@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as StackRouteImport } from './routes/stack'
@@ -17,6 +18,11 @@ import { Route as StackRouteImport } from './routes/stack'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -37,12 +43,14 @@ const StackRoute = StackRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/onboarding': typeof OnboardingRoute
   '/security': typeof SecurityRoute
   '/stack': typeof StackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/onboarding': typeof OnboardingRoute
   '/security': typeof SecurityRoute
   '/stack': typeof StackRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
   '/onboarding': typeof OnboardingRoute
   '/security': typeof SecurityRoute
   '/stack': typeof StackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/security' | '/stack'
+  fullPaths: '/' | '/contact' | '/onboarding' | '/security' | '/stack'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/security' | '/stack'
-  id: '__root__' | '/' | '/onboarding' | '/security' | '/stack'
+  to: '/' | '/contact' | '/onboarding' | '/security' | '/stack'
+  id: '__root__' | '/' | '/contact' | '/onboarding' | '/security' | '/stack'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
   OnboardingRoute: typeof OnboardingRoute
   SecurityRoute: typeof SecurityRoute
   StackRoute: typeof StackRoute
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
   OnboardingRoute: OnboardingRoute,
   SecurityRoute: SecurityRoute,
   StackRoute: StackRoute,
