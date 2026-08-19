@@ -43,7 +43,7 @@ export function TopNav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-gridline bg-canvas/85 backdrop-blur">
-      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 md:px-8">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 md:px-8">
         <BrandMark className="min-w-0 truncate font-mono text-[12px] font-medium tracking-[0.16em] text-ebony" />
 
         <div className="hidden lg:block">
