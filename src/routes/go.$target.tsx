@@ -1,78 +1,304 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { ArrowUpRight } from "lucide-react";
-import { Panel } from "@/components/site/Primitives";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ArrowUpRight, Check } from "lucide-react";
+import { PageShell, Panel, SectionHeader } from "@/components/site/Primitives";
 
-const TARGETS: Record<string, { label: string; url: string }> = {
+type Plan = {
+  name: string;
+  price: string;
+  unit: string;
+  specs: string[];
+  href: string;
+  featured?: boolean;
+};
+
+type Target = {
+  key: string;
+  title: string;
+  lead: string;
+  index: string;
+  signup: { href: string; label: string };
+  plans: Plan[];
+  team: [string, string][];
+};
+
+const TARGETS: Record<string, Target> = {
   hosting: {
-    label: "Managed Webhosting & Mail",
-    url: "https://www.infomaniak.com/en/hosting/web-hosting",
+    key: "hosting",
+    title: "Managed Webhosting & Mail — Infomaniak",
+    index: "GO / 01",
+    lead: "Zwitserse shared hosting met NVMe-storage, gratis SSL en inbegrepen mailboxen. Onderstaande tarieven zijn de publieke Infomaniak-lijstprijzen (indicatief, excl. btw, jaarfacturatie).",
+    signup: {
+      href: "https://www.infomaniak.com/en/hosting/web-hosting",
+      label: "Aanmelden bij Infomaniak Webhosting",
+    },
+    plans: [
+      {
+        name: "Web Hosting — Starter",
+        price: "vanaf CHF 6.–",
+        unit: "/ maand",
+        specs: [
+          "1 website, 20 GB NVMe",
+          "Gratis SSL (Let's Encrypt)",
+          "Onbeperkt dataverkeer",
+          "Dagelijkse back-ups (30 dagen)",
+        ],
+        href: "https://www.infomaniak.com/en/hosting/web-hosting",
+      },
+      {
+        name: "Web Hosting — Standard",
+        price: "vanaf CHF 12.–",
+        unit: "/ maand",
+        specs: [
+          "Onbeperkt aantal websites",
+          "250 GB NVMe storage",
+          "PHP-workers & Node.js support",
+          "Gratis domein bij jaarplan",
+        ],
+        href: "https://www.infomaniak.com/en/hosting/web-hosting",
+        featured: true,
+      },
+      {
+        name: "kMail Service",
+        price: "vanaf CHF 1.65",
+        unit: "/ mailbox / maand",
+        specs: [
+          "Zwitserse mailinfrastructuur",
+          "Geen scanning, geen advertenties",
+          "IMAP/SMTP + webmail",
+          "Antispam & antivirus inbegrepen",
+        ],
+        href: "https://www.infomaniak.com/en/hosting/service-mail",
+      },
+    ],
+    team: [
+      ["Aanmeldingsteam", "Delplanche Infrastructure Desk"],
+      ["Rol", "Technisch beheerder op jouw Infomaniak-account"],
+      ["Doorlooptijd", "< 24 uur na toegangsverlening"],
+      ["Inbegrepen", "DNS, SSL, mailrouting, webserverconfiguratie"],
+    ],
   },
-  vps: { label: "Cloud VPS & Bare-Metal", url: "https://www.infomaniak.com/en/hosting/vps-cloud" },
-  ksuite: { label: "kSuite & Privacy Storage", url: "https://www.infomaniak.com/en/ksuite" },
+  vps: {
+    key: "vps",
+    title: "Cloud VPS & Bare-Metal — Infomaniak",
+    index: "GO / 02",
+    lead: "Dedicated compute in Genève met volledige root-toegang. Publieke Infomaniak-lijstprijzen, indicatief en excl. btw.",
+    signup: {
+      href: "https://www.infomaniak.com/en/hosting/vps-cloud",
+      label: "Configureer je Cloud VPS",
+    },
+    plans: [
+      {
+        name: "Cloud VPS — 2 vCPU",
+        price: "vanaf CHF 8.–",
+        unit: "/ maand",
+        specs: ["2 vCPU / 4 GB RAM", "80 GB NVMe", "Root-toegang, eigen distro", "Snapshots & back-ups"],
+        href: "https://www.infomaniak.com/en/hosting/vps-cloud",
+      },
+      {
+        name: "Cloud VPS — 4 vCPU",
+        price: "vanaf CHF 20.–",
+        unit: "/ maand",
+        specs: [
+          "4 vCPU / 8 GB RAM",
+          "160 GB NVMe",
+          "Docker / Kubernetes-ready",
+          "DDoS-mitigatie inbegrepen",
+        ],
+        href: "https://www.infomaniak.com/en/hosting/vps-cloud",
+        featured: true,
+      },
+      {
+        name: "Public Cloud / Bare-Metal",
+        price: "pay-per-use",
+        unit: "vanaf CHF 0.0092 / vCPU / u",
+        specs: [
+          "OpenStack-compatibel",
+          "Dedicated bare-metal opties",
+          "Schaalbaar per uur",
+          "100% hernieuwbare energie",
+        ],
+        href: "https://www.infomaniak.com/en/hosting/public-cloud",
+      },
+    ],
+    team: [
+      ["Aanmeldingsteam", "Delplanche Systems Engineering"],
+      ["Rol", "Provisioning, hardening & monitoring"],
+      ["Doorlooptijd", "< 48 uur voor een productieklare node"],
+      ["Inbegrepen", "Firewall, fail2ban, reverse proxy, TLS 1.3"],
+    ],
+  },
+  ksuite: {
+    key: "ksuite",
+    title: "kSuite & Privacy Storage — Infomaniak",
+    index: "GO / 03",
+    lead: "Het soevereine alternatief voor Microsoft 365 en Google Workspace. Publieke Infomaniak-lijstprijzen, indicatief en excl. btw.",
+    signup: {
+      href: "https://www.infomaniak.com/en/ksuite",
+      label: "Start met kSuite",
+    },
+    plans: [
+      {
+        name: "kSuite Standard",
+        price: "vanaf CHF 2.60",
+        unit: "/ gebruiker / maand",
+        specs: ["kMail + kDrive + kMeet", "1 TB gedeelde opslag", "Eigen domeinnaam", "Zwitserse jurisdictie"],
+        href: "https://www.infomaniak.com/en/ksuite",
+        featured: true,
+      },
+      {
+        name: "kDrive Solo / Team",
+        price: "vanaf CHF 4.60",
+        unit: "/ maand",
+        specs: ["2 TB versleutelde opslag", "Desktop- & mobiele sync", "Versiebeheer", "Geen datamining"],
+        href: "https://www.infomaniak.com/en/hosting/kdrive",
+      },
+      {
+        name: "Web Analytics (cookieloos)",
+        price: "inbegrepen",
+        unit: "bij hosting",
+        specs: [
+          "Geen cookiebanner nodig",
+          "Geen tracking van individuen",
+          "GDPR/FADP-conform",
+          "Realtime rapportage",
+        ],
+        href: "https://www.infomaniak.com/en/hosting/web-analytics",
+      },
+    ],
+    team: [
+      ["Aanmeldingsteam", "Delplanche Workspace Migration"],
+      ["Rol", "Migratie van mailboxen, agenda's en bestanden"],
+      ["Doorlooptijd", "1 – 3 werkdagen afhankelijk van volume"],
+      ["Inbegrepen", "DNS/MX-switch, gebruikerstraining, back-upplan"],
+    ],
+  },
 };
 
 export const Route = createFileRoute("/go/$target")({
-  head: () => ({
-    meta: [
-      { title: "Routing — delplanche.cloud" },
-      { name: "robots", content: "noindex" },
-      { name: "description", content: "Geautoriseerde routing naar onze infrastructuurpartner." },
-      { property: "og:title", content: "Routing — delplanche.cloud" },
-      { property: "og:description", content: "Doorverwijzing naar Infomaniak." },
-    ],
-  }),
+  loader: ({ params }) => {
+    const entry = TARGETS[params.target];
+    if (!entry) throw notFound();
+    return { entry };
+  },
+  head: ({ loaderData }) => {
+    const t = loaderData?.entry;
+    const title = t ? `${t.title} — delplanche.cloud` : "Stack niet gevonden — delplanche.cloud";
+    const description = t
+      ? `Actuele Infomaniak-tarieven en het Delplanche aanmeldingsteam voor ${t.title}.`
+      : "Deze stack bestaat niet.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        ...(t ? [] : [{ name: "robots", content: "noindex" }]),
+      ],
+    };
+  },
+  notFoundComponent: GoNotFound,
   component: GoPage,
 });
 
 function GoPage() {
-  const { target } = Route.useParams();
-  const entry = TARGETS[target];
-
-  useEffect(() => {
-    if (!entry) return undefined;
-    const t = setTimeout(() => window.location.replace(entry.url), 1200);
-    return () => clearTimeout(t);
-  }, [entry]);
+  const { entry } = Route.useLoaderData();
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-3xl items-center px-5 py-32 md:px-8">
-      <Panel className="w-full">
-        <span className="label-mono">Authorized Routing</span>
-        {entry ? (
-          <>
-            <h1 className="mt-4 text-2xl font-semibold text-ebony">
-              Doorverwijzen naar Infomaniak…
-            </h1>
-            <p className="mt-3 text-sm text-muted-ink">
-              Stack: <span className="font-mono text-ebony">{entry.label}</span>
-            </p>
+    <PageShell index={entry.index} title={entry.title} lead={entry.lead}>
+      <section>
+        <SectionHeader index="A / Pricing" title="Actuele Infomaniak-tarieven" />
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {entry.plans.map((plan) => (
+            <div
+              key={plan.name}
+              className={`blueprint-panel flex flex-col p-7 ${
+                plan.featured ? "border-moss" : ""
+              }`}
+            >
+              <span className="label-mono">{plan.name}</span>
+              <p className="mt-5 font-mono text-[18px] text-ebony">{plan.price}</p>
+              <p className="mt-1 font-mono text-[10px] tracking-[0.16em] text-muted-ink uppercase">
+                {plan.unit}
+              </p>
+              <ul className="mt-7 space-y-2.5 border-t border-gridline pt-6">
+                {plan.specs.map((s) => (
+                  <li key={s} className="flex gap-2 text-sm leading-relaxed text-muted-ink">
+                    <Check size={13} className="mt-1 shrink-0 text-moss" strokeWidth={1.4} />
+                    {s}
+                  </li>
+                ))}
+              </ul>
+              <div className="grow" />
+              <a
+                href={plan.href}
+                rel="noreferrer nofollow sponsored"
+                target="_blank"
+                className="mt-8 inline-flex items-center justify-center gap-2 border border-moss px-5 py-3 font-mono text-[10px] tracking-[0.18em] text-moss uppercase transition-colors hover:bg-moss/[0.06]"
+              >
+                Bekijk bij Infomaniak <ArrowUpRight size={12} />
+              </a>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-xs leading-relaxed text-muted-ink">
+          Tarieven zijn indicatieve publieke lijstprijzen van Infomaniak (CHF, excl. btw) en kunnen
+          wijzigen. De actuele prijs staat altijd op infomaniak.com. Delplanche kan een commissie
+          ontvangen via deze geautoriseerde links — dit kost jou niets extra.
+        </p>
+      </section>
+
+      <section>
+        <SectionHeader
+          index="B / Onboarding Team"
+          title="Aanmeldingsteam & begeleiding"
+          lead="Je meldt aan bij Infomaniak; Delplanche voert de technische inrichting uit."
+        />
+        <Panel className="mt-10">
+          <dl className="divide-y divide-gridline border-y border-gridline">
+            {entry.team.map(([k, v]) => (
+              <div key={k} className="flex flex-wrap justify-between gap-4 py-4">
+                <dt className="label-mono">{k}</dt>
+                <dd className="font-mono text-[11px] text-ebony">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="mt-10 flex flex-wrap items-center gap-5">
             <a
-              href={entry.url}
-              className="mt-8 inline-flex items-center gap-2 border border-moss bg-moss px-4 py-3 font-mono text-[11px] tracking-[0.14em] text-canvas uppercase hover:bg-moss-hover"
+              href={entry.signup.href}
+              rel="noreferrer nofollow sponsored"
+              target="_blank"
+              className="inline-flex items-center gap-2 border border-moss bg-moss px-5 py-3 font-mono text-[10px] tracking-[0.18em] text-canvas uppercase hover:bg-moss-hover"
             >
-              Ga nu verder <ArrowUpRight size={13} />
+              {entry.signup.label} <ArrowUpRight size={12} />
             </a>
-            <p className="mt-6 text-xs leading-relaxed text-muted-ink">
-              Delplanche kan een commissie ontvangen bij aankopen via deze link. Dit kost u niets
-              extra.
-            </p>
-          </>
-        ) : (
-          <>
-            <h1 className="mt-4 text-2xl font-semibold text-ebony">Onbekende routing</h1>
-            <p className="mt-3 text-sm text-muted-ink">
-              Deze routingsleutel bestaat niet. Bekijk de gecureerde stacks op de homepage.
-            </p>
             <Link
-              to="/"
-              className="mt-8 inline-flex items-center gap-2 border border-gridline bg-card px-4 py-3 font-mono text-[11px] tracking-[0.14em] text-ebony uppercase hover:border-moss hover:text-moss"
+              to="/onboarding"
+              className="inline-flex items-center gap-2 border border-gridline bg-card px-5 py-3 font-mono text-[10px] tracking-[0.18em] text-ebony uppercase hover:border-moss hover:text-moss"
             >
-              Terug naar home
+              Vraag turn-key setup aan
             </Link>
-          </>
-        )}
+          </div>
+        </Panel>
+      </section>
+    </PageShell>
+  );
+}
+
+function GoNotFound() {
+  return (
+    <PageShell
+      index="GO / —"
+      title="Onbekende routingsleutel"
+      lead="Deze stack bestaat niet. Bekijk de drie gecureerde pijlers op de stackpagina."
+    >
+      <Panel>
+        <Link
+          to="/stack"
+          className="inline-flex items-center gap-2 border border-gridline bg-card px-5 py-3 font-mono text-[10px] tracking-[0.18em] text-ebony uppercase hover:border-moss hover:text-moss"
+        >
+          Naar de stackspecificaties
+        </Link>
       </Panel>
-    </div>
+    </PageShell>
   );
 }
