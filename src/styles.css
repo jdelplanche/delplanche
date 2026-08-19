@@ -25,22 +25,31 @@
   --color-muted: var(--grid-soft);
   --color-muted-foreground: var(--muted-ink);
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-hand: "Caveat", cursive;
 }
 
 :root {
-  --canvas: oklch(0.962 0.008 85);
-  --grid-soft: oklch(0.94 0.008 85);
-  --gridline: oklch(0.895 0.009 80);
-  --ebony: oklch(0.229 0.003 285);
-  --moss: oklch(0.343 0.045 155);
-  --moss-hover: oklch(0.288 0.043 155);
-  --terracotta: oklch(0.616 0.101 39);
-  --muted-ink: oklch(0.542 0.006 75);
+  /* Travertine #F7F5F0 */
+  --canvas: oklch(0.968 0.006 85);
+  --grid-soft: oklch(0.95 0.006 85);
+  /* Gridline #E2DFD8 */
+  --gridline: oklch(0.897 0.008 85);
+  /* Slate black #1A1A18 */
+  --ebony: oklch(0.216 0.002 95);
+  /* Alpine moss #2A4736 */
+  --moss: oklch(0.339 0.043 156);
+  --moss-hover: oklch(0.29 0.04 156);
+  /* Terracotta #C26D52 */
+  --terracotta: oklch(0.617 0.101 39);
+  --muted-ink: oklch(0.548 0.005 90);
   --background: var(--canvas);
   --foreground: var(--ebony);
-  --card: oklch(0.978 0.006 85);
+  /* Paper layer #FAF8F5 */
+  --card: oklch(0.981 0.005 85);
+  /* Millimeter paper: gridline at ~4% strength over the canvas */
+  --grid-ink: color-mix(in oklab, var(--gridline) 22%, var(--canvas));
 }
 
 @layer base {
@@ -53,38 +62,58 @@
     color: var(--ebony);
     font-family: var(--font-sans);
     background-image:
-      linear-gradient(to right, var(--gridline) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--gridline) 1px, transparent 1px);
-    background-size: 24px 24px;
+      linear-gradient(to right, var(--grid-ink) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-ink) 1px, transparent 1px);
+    background-size: 32px 32px;
     -webkit-font-smoothing: antialiased;
   }
 
   h1,
   h2,
   h3 {
-    letter-spacing: -0.02em;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 }
 
 @utility blueprint-panel {
   border: 1px solid var(--gridline);
-  background-color: color-mix(in oklab, var(--card) 88%, transparent);
-  backdrop-filter: blur(2px);
+  background-color: color-mix(in oklab, var(--card) 92%, transparent);
 }
 
 @utility label-mono {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 10px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted-ink);
+}
+
+@utility atelier-input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--gridline);
+  background-color: transparent;
+  padding: 0.6rem 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ebony);
+  outline: none;
+  transition: border-color 200ms ease;
+  &::placeholder {
+    color: color-mix(in oklab, var(--muted-ink) 70%, transparent);
+  }
+  &:focus {
+    border-bottom-color: var(--moss);
+  }
 }
 
 @utility pulse-dot {
   position: relative;
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 9999px;
   background: var(--moss);
   &::after {
@@ -92,15 +121,15 @@
     position: absolute;
     inset: -3px;
     border-radius: 9999px;
-    background: color-mix(in oklab, var(--moss) 40%, transparent);
-    animation: pulse-ring 1.8s ease-out infinite;
+    background: color-mix(in oklab, var(--moss) 35%, transparent);
+    animation: pulse-ring 2.4s ease-out infinite;
   }
 }
 
 @keyframes pulse-ring {
   0% {
     transform: scale(0.6);
-    opacity: 0.9;
+    opacity: 0.8;
   }
   100% {
     transform: scale(1.6);
