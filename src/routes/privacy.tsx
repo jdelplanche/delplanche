@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, Panel, SectionHeader } from "@/components/site/Primitives";
-import { RedlineNote } from "@/components/site/RedlineNote";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
