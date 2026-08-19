@@ -136,3 +136,31 @@
     opacity: 0;
   }
 }
+
+@utility pulse-dot-alert {
+  background: var(--terracotta);
+  &::after {
+    background: color-mix(in oklab, var(--terracotta) 35%, transparent);
+  }
+}
+
+@media print {
+  body {
+    background-image: none;
+    background-color: #fff;
+  }
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  main {
+    min-height: 0;
+  }
+  .blueprint-panel {
+    break-inside: avoid;
+  }
+  a[href]::after {
+    content: "";
+  }
+}
