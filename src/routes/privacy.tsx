@@ -54,14 +54,14 @@ function PrivacyPage() {
       <section>
         <SectionHeader index="B / DISCLOSURE" title="Transparante Verantwoording" />
         <Panel className="mt-6">
-          <blockquote className="border-l-2 border-terracotta pl-5 text-sm leading-relaxed text-ebony md:text-base">
+          <blockquote className="border-l border-moss pl-6 text-sm leading-relaxed text-ebony md:text-base">
             Delplanche kan een commissie ontvangen wanneer u diensten afneemt via onze links
             (/go/*). Dit beïnvloedt uw aankoopprijs niet en ondersteunt het onderhoud van onze
             soevereine infrastructurele tools.
           </blockquote>
-          <RedlineNote className="mt-8">
-            // Aanbevelingen worden nooit bepaald door commissie, wel door productiegebruik.
-          </RedlineNote>
+          <p className="mt-8 text-sm leading-relaxed text-muted-ink">
+            Aanbevelingen worden nooit bepaald door commissie, wel door eigen productiegebruik.
+          </p>
         </Panel>
       </section>
     </PageShell>
