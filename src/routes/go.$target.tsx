@@ -30,10 +30,9 @@ function GoPage() {
   const entry = TARGETS[target];
 
   useEffect(() => {
-    if (entry) {
-      const t = setTimeout(() => window.location.replace(entry.url), 1200);
-      return () => clearTimeout(t);
-    }
+    if (!entry) return undefined;
+    const t = setTimeout(() => window.location.replace(entry.url), 1200);
+    return () => clearTimeout(t);
   }, [entry]);
 
   return (

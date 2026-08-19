@@ -16,6 +16,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as StackRouteImport } from './routes/stack'
+import { Route as GoTargetRouteImport } from './routes/go.$target'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +53,11 @@ const StackRoute = StackRouteImport.update({
   path: '/stack',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GoTargetRoute = GoTargetRouteImport.update({
+  id: '/go/$target',
+  path: '/go/$target',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/security': typeof SecurityRoute
   '/stack': typeof StackRoute
+  '/go/$target': typeof GoTargetRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/security': typeof SecurityRoute
   '/stack': typeof StackRoute
+  '/go/$target': typeof GoTargetRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/security': typeof SecurityRoute
   '/stack': typeof StackRoute
+  '/go/$target': typeof GoTargetRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/security'
     | '/stack'
+    | '/go/$target'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/security'
     | '/stack'
+    | '/go/$target'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/security'
     | '/stack'
+    | '/go/$target'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SecurityRoute: typeof SecurityRoute
   StackRoute: typeof StackRoute
+  GoTargetRoute: typeof GoTargetRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/go/$target': {
+      id: '/go/$target'
+      path: '/go/$target'
+      fullPath: '/go/$target'
+      preLoaderRoute: typeof GoTargetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SecurityRoute: SecurityRoute,
   StackRoute: StackRoute,
+  GoTargetRoute: GoTargetRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
