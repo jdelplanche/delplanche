@@ -1,8 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, MessageSquareLock, Copy, Check } from "lucide-react";
-import { PageShell, Panel, SectionHeader } from "@/components/site/Primitives";
-import { RedlineNote } from "@/components/site/RedlineNote";
+import {
+  ActionButton,
+  PageShell,
+  Panel,
+  SectionHeader,
+} from "@/components/site/Primitives";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -32,7 +36,7 @@ function ContactPage() {
     try {
       await navigator.clipboard.writeText(FINGERPRINT);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 2400);
     } catch {
       setCopied(false);
     }
@@ -40,52 +44,60 @@ function ContactPage() {
 
   return (
     <PageShell
-      index="04 / CONTACT"
+      index="04 / Contact"
       title="Sovereign Direct Vectors"
-      lead="Geen formulieren-doolhof, geen CRM-tracking. Drie directe kanalen, elk end-to-end te verifiëren."
+      lead="Geen formulieren-doolhof, geen CRM-tracking. Twee directe kanalen, elk end-to-end te verifiëren."
     >
       <section className="grid gap-6 md:grid-cols-2">
         <Panel>
-          <Mail size={18} className="text-moss" />
-          <span className="mt-4 block label-mono">E-Mail Vector</span>
+          <Mail size={16} strokeWidth={1.2} className="text-moss" />
+          <span className="mt-6 block label-mono">Direct Mail</span>
           <a
             href="mailto:cloud@delplanche.cloud"
-            className="mt-2 block font-mono text-[15px] text-ebony hover:text-moss"
+            className="mt-3 block font-mono text-[14px] text-ebony transition-colors hover:text-moss"
           >
             cloud@delplanche.cloud
           </a>
-          <p className="mt-4 text-sm leading-relaxed text-muted-ink">
+          <p className="mt-5 text-sm leading-relaxed text-muted-ink">
             Gehost op Infomaniak kMail — Zwitserse jurisdictie, geen scanning.
           </p>
         </Panel>
         <Panel>
-          <MessageSquareLock size={18} className="text-moss" />
-          <span className="mt-4 block label-mono">Decentraal Matrix Protocol</span>
-          <p className="mt-2 font-mono text-[15px] text-ebony">@jona:delplanche.cloud</p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-ink">
+          <MessageSquareLock size={16} strokeWidth={1.2} className="text-moss" />
+          <span className="mt-6 block label-mono">Decentraal Matrix Protocol</span>
+          <p className="mt-3 font-mono text-[14px] text-ebony">@jona:delplanche.cloud</p>
+          <p className="mt-5 text-sm leading-relaxed text-muted-ink">
             End-to-end versleuteld, federatief. Voor realtime technisch overleg.
           </p>
         </Panel>
       </section>
 
       <section>
-        <SectionHeader index="A / VERIFICATION" title="PGP Public Key Fingerprint" />
-        <Panel className="mt-6">
-          <div className="border border-gridline bg-canvas p-5">
+        <SectionHeader
+          index="A / Verification"
+          title="PGP Public Key Fingerprint"
+          lead="Verifieer altijd de fingerprint voordat je vertrouwelijke data verstuurt."
+        />
+        <Panel className="mt-10">
+          <div className="border-t border-b border-gridline py-6">
             <p className="font-mono text-[12px] leading-relaxed break-words text-ebony md:text-[14px]">
               {FINGERPRINT}
             </p>
           </div>
-          <button
-            onClick={copy}
-            className="mt-5 inline-flex items-center gap-2 border border-moss bg-moss px-4 py-3 font-mono text-[11px] tracking-[0.14em] text-canvas uppercase transition-colors hover:bg-moss-hover"
-          >
-            {copied ? <Check size={13} /> : <Copy size={13} />}
-            {copied ? "Gekopieerd" : "[ Kopieer fingerprint ]"}
-          </button>
-          <RedlineNote className="mt-8">
-            // Verifieer altijd de fingerprint voor je vertrouwelijke data verstuurt.
-          </RedlineNote>
+          <div className="mt-8 flex flex-wrap items-center gap-5">
+            <ActionButton onClick={copy}>
+              {copied ? <Check size={12} /> : <Copy size={12} />}
+              {copied ? "Gekopieerd" : "Kopieer Fingerprint"}
+            </ActionButton>
+            <span
+              aria-live="polite"
+              className={`border border-gridline bg-card px-3 py-1.5 font-mono text-[9px] tracking-[0.18em] text-moss uppercase transition-opacity duration-300 ${
+                copied ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+            >
+              Fingerprint gekopieerd naar klembord
+            </span>
+          </div>
         </Panel>
       </section>
     </PageShell>

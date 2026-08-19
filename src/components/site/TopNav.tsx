@@ -3,35 +3,59 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const links = [
-  { label: "01 STACK", to: "/stack" },
-  { label: "02 SECURITY", to: "/security" },
-  { label: "03 ONBOARDING", to: "/onboarding" },
-  { label: "04 CONTACT", to: "/contact" },
+  { label: "01 Stack", to: "/stack" },
+  { label: "02 Security", to: "/security" },
+  { label: "03 Onboarding", to: "/onboarding" },
+  { label: "04 Contact", to: "/contact" },
 ];
+
+export function BrandMark({ className }: { className?: string }) {
+  return (
+    <span className={className}>
+      <a
+        href="https://delplanche.com"
+        className="transition-colors hover:text-moss"
+        rel="noreferrer"
+      >
+        DELPLANCHE
+      </a>
+      <span className="text-muted-ink"> / </span>
+      <Link to="/" className="text-muted-ink transition-colors hover:text-moss">
+        CLOUD
+      </Link>
+    </span>
+  );
+}
+
+function StatusPill() {
+  return (
+    <span className="flex items-center gap-2 border border-gridline bg-card px-3 py-1.5">
+      <span className="pulse-dot" />
+      <span className="font-mono text-[9px] tracking-[0.18em] text-moss uppercase">
+        Swiss DC Active (Geneva) — All Systems Operational
+      </span>
+    </span>
+  );
+}
 
 export function TopNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-gridline bg-canvas/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 md:px-8">
-        <Link to="/" className="font-mono text-[13px] font-bold tracking-[0.12em] text-ebony">
-          DELPLANCHE <span className="text-terracotta">/</span> CLOUD
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-gridline bg-canvas/85 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 md:px-8">
+        <BrandMark className="min-w-0 truncate font-mono text-[12px] font-medium tracking-[0.16em] text-ebony" />
 
-        <div className="hidden items-center gap-2 border border-gridline bg-card px-3 py-1.5 lg:flex">
-          <span className="pulse-dot" />
-          <span className="font-mono text-[10px] tracking-[0.16em] text-moss uppercase">
-            Swiss DC Active (Geneva)
-          </span>
+        <div className="hidden lg:block">
+          <StatusPill />
         </div>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden shrink-0 items-center gap-7 md:flex">
           {links.map((l) => (
             <Link
               key={l.to}
               to={l.to}
-              className="font-mono text-[11px] tracking-[0.14em] text-muted-ink uppercase transition-colors hover:text-ebony"
+              className="font-mono text-[10px] tracking-[0.18em] text-muted-ink uppercase transition-colors hover:text-ebony"
               activeProps={{ className: "text-moss" }}
             >
               {l.label}
@@ -41,7 +65,7 @@ export function TopNav() {
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="text-ebony md:hidden"
+          className="shrink-0 text-ebony md:hidden"
           aria-label="Toggle navigation"
         >
           {open ? <X size={18} /> : <Menu size={18} />}
@@ -49,20 +73,17 @@ export function TopNav() {
       </div>
 
       {open && (
-        <nav className="border-t border-gridline bg-canvas px-5 py-4 md:hidden">
-          <div className="mb-3 flex items-center gap-2">
-            <span className="pulse-dot" />
-            <span className="font-mono text-[10px] tracking-[0.16em] text-moss uppercase">
-              Swiss DC Active (Geneva)
-            </span>
+        <nav className="border-t border-gridline bg-canvas px-5 py-5 md:hidden">
+          <div className="mb-4">
+            <StatusPill />
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {links.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
                 onClick={() => setOpen(false)}
-                className="font-mono text-[11px] tracking-[0.14em] text-ebony uppercase"
+                className="font-mono text-[10px] tracking-[0.18em] text-ebony uppercase"
               >
                 {l.label}
               </Link>
